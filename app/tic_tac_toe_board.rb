@@ -12,16 +12,26 @@ class TicTacToeBoard
     [2, 4, 6],
   ]
 
-  def initialize(positions)
+  def initialize(positions = Array.new(9))
     @positions = positions
+  end
 
-    @rows = positions.each_slice(3).to_a.map do |p|
+  def rows
+    @positions.each_slice(3).to_a.map do |p|
       TicTacToeBoardRow.new(p)
     end
   end
 
   def to_s
-    @rows.map(&:to_s).join("\n")
+    rows.map(&:to_s).join("\n")
+  end
+
+  def mark(player_mark, position)
+    @positions[position] = player_mark
+  end
+
+  def has_winner?
+    !winner.nil?
   end
 
   def winner
