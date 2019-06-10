@@ -1,6 +1,34 @@
 require_relative '../app/tic_tac_toe_board'
 
 RSpec.describe TicTacToeBoard do
+  describe '#draw?' do
+    context 'draw' do
+      it 'returns true' do
+        positions = [
+          'o', 'x', 'o',
+          'x', 'o', 'o',
+          'x', 'o', 'x',
+        ]
+
+        board = TicTacToeBoard.new(positions)
+        expect(board.draw?).to be true
+      end
+    end
+
+    context 'not a draw' do
+      it 'returns false' do
+        positions = [
+          'x', 'x', 'x',
+          nil, 'o', nil,
+          'o', nil, nil
+        ]
+
+        board = TicTacToeBoard.new(positions)
+        expect(board.draw?).to be false
+      end
+    end
+  end
+
   describe '#to_s' do
     it 'formats the board' do
       positions = [

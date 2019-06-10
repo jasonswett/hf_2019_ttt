@@ -34,6 +34,12 @@ class TicTacToeBoard
     !winner.nil?
   end
 
+  def draw?
+    WINNING_CONFIGURATIONS.map do |indices|
+      both_x_and_o_present?(indices)
+    end.uniq == [true]
+  end
+
   def winner
     %w(X O).each do |mark|
       return mark if has_winning_configuration?(mark)
@@ -58,5 +64,10 @@ class TicTacToeBoard
     end
 
     true
+  end
+
+  def both_x_and_o_present?(indices)
+    marks = indices.map { |i| @positions[i] }
+    marks.include?('x') && marks.include?('o')
   end
 end

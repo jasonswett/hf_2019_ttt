@@ -13,10 +13,8 @@ class Interface
   end
 
   def next_message
-    if @board.has_winner?
-      "#{@board.winner} wins"
-    else
-      @board.to_s
-    end
+    return 'MEOW MEOW, MOTHERFUCKER!' if @board.draw?
+    return "#{@board.winner} wins" if @board.has_winner?
+    @board.to_s
   end
 end
