@@ -1,22 +1,56 @@
 require 'pry'
+require 'tty-prompt'
 require_relative '../app/tic_tac_toe_board'
 
-class Interface
+class PromptInputStrategy
   def initialize
-    @board = TicTacToeBoard.new
+    @prompt = TTY::Prompt.new
   end
 
-  def run(commands)
-    commands.each_with_index do |command, index|
-      player = ['x', 'o'][index % 2]
+  def ask(message)
+    @prompt.ask(message)
+  end
+end
 
-      if !position_valid?(command.values.first)
+class CommandScriptInputStrategy
+  def initialize(commands)
+    @commands = commands
+    @index = 0
+  end
+
+  def ask(message)
+    value = @commands[@index].values.first
+    @index += 1
+    value
+  end
+end
+
+class Interface
+  def initialize(input_strategy)
+    @board = TicTacToeBoard.new
+    @input_strategy = input_strategy
+  end
+
+  def run
+    index = 0
+
+    loop do
+      player = ['x', 'o'][index % 2]
+      index += 1
+      position = @input_strategy.ask("Move for player #{player.upcase}")
+      return if position == 'quit'
+
+      @next_message = nil
+
+      if position_valid?(position)
+        @board.mark(player, position.to_i)
+      else
         @next_message = "That's not how we do things around here"
-        return
       end
 
-      position = command.values.first.to_i
-      @board.mark(player, position)
+      @board.mark(player, position.to_i)
+      puts next_message
+      break if @board.has_winner? || @board.draw?
     end
   end
 
