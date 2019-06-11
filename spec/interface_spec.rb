@@ -67,16 +67,62 @@ RSpec.describe Interface do
     end
   end
 
-  context 'invalid input' do
-    it 'shows an error message' do
+  context 'invalid inputs' do
+    context 'string' do
+      it 'shows an error message' do
+        script = [
+          { 'Move for player X' => 'rook takes queen' }
+        ]
+
+        interface = Interface.new
+        interface.run(script)
+
+        expect(interface.next_message).to eq("That's not how we do things around here")
+      end
+    end
+
+    context 'too big a number' do
+      it 'shows an error message' do
+        script = [
+          { 'Move for player X' => '52' }
+        ]
+
+        interface = Interface.new
+        interface.run(script)
+
+        expect(interface.next_message).to eq("That's not how we do things around here")
+      end
+    end
+
+    context 'negative number' do
+      it 'shows an error message' do
+        script = [
+          { 'Move for player X' => '-3' }
+        ]
+
+        interface = Interface.new
+        interface.run(script)
+
+        expect(interface.next_message).to eq("That's not how we do things around here")
+      end
+    end
+  end
+
+  context 'invalid input followed by valid input' do
+    it 'still works' do
       script = [
-        { 'Move for player X' => 'rook takes queen' }
+        { 'Move for player X' => 'hi' },
+        { 'Move for player X' => '0' },
+        { 'Move for player O' => '4' },
+        { 'Move for player X' => '1' },
+        { 'Move for player O' => '6' },
+        { 'Move for player X' => '2' }
       ]
 
       interface = Interface.new
       interface.run(script)
 
-      expect(interface.next_message).to eq("That's not how we do things around here")
+      expect(interface.next_message).to eq('X wins')
     end
   end
 end
